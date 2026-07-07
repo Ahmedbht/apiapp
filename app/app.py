@@ -39,7 +39,7 @@ def get_posts(id: int, db: Session =Depends(get_db)):
 def create_post(post: PostCreate, db:Session =Depends(get_db)):
     new_post= models.Post(
         title=post.title,
-        content=post.content
+        content=post.content,
     )
     db.add(new_post)
     db.commit()
