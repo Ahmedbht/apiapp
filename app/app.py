@@ -1,21 +1,22 @@
 from fastapi import FastAPI, HTTPException, Depends
-from app.schemas import PostCreate
+from app.schemas import PostCreate, PostResponse
 from sqlalchemy.orm import Session
 from app import models
 from app.database import engine ,get_db
+from typing import List
 
 models.Base.metadata.create_all(bind=engine)
 app =FastAPI()
 
 
 
-@app.get("/posts")
+@app.get("/posts", response_model=List[PostResponse])
 def get_all_posts(db:Session =Depends(get_db)):
     #get all posts from db
     posts= db.query(models.Post).all()
     return posts
 
-@app.get("/posts/{id}")
+@app.get("/posts/{id}", response_model=PostResponse)
 def get_posts(id: int, db: Session =Depends(get_db)):
     post= db.query(models.Post).filter(models.Post.id ==id).first()
     if not post:
