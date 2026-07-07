@@ -47,4 +47,10 @@ def create_post(post: PostCreate, db:Session =Depends(get_db)):
     return new_post
 
 @app.delete("/posts/{id}")
-def delete_post(id: int,db: Session= Depends(get_db))
+def delete_post(id: int,db: Session= Depends(get_db)):
+    post= db.query(models.Post).filter(models.Post.id ==id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    db.delete(post)
+    db.commit()
+    return{"message": f"Post {id} deleted successfully"}
