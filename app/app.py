@@ -29,26 +29,22 @@ def get_all_posts(db:Session =Depends(get_db)):
     return posts
 
 @app.get("/posts/{id}")
-def get_post(id :int):
-    if str(id) not in text_posts:
-        raise HTTPException(status_code=404, detail="Post not found")
-    return text_posts.get(str(id))
+def get_posts(id: int, db: Session =Depends(get_db)):
+    post= db.query(models.Post).filter(models.Post.id ==id).first()
+    if not post:
+        raise HTTPException(status_code=404 , detail="Page not found")
+    return post
 
 @app.post("/posts")
-def create_post(post : PostCreate):
-    new_id= str(len(text_posts)+1)
-
-    text_posts[new_id]={
-        "title" :post.title,
-        "content": post.content
-    }
-    return {"id": new_id,"tilte": post.title, "content": post.content}
+def create_post(post: PostCreate, db:Session =Depends(get_db)):
+    new_post= models.Post(
+        title:post.title,
+        content:post.content
+    )
+    db.add(new_post)
+    db.commit()
+    db.refresh(new_post)
+    return new_post
 
 @app.delete("/posts/{id}")
-def delete_post(id:int):
-    if str(id) not in text_posts:
-        raise HTTPException(status_code= 404, detail="Page not found")
-
-    del text_posts[str(id)]
-    return {"message": f"Post {id} deleted successfully"}
-    
+def delete_post(id: int,db: Session= Depends(get_db))
