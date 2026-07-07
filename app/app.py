@@ -8,8 +8,6 @@ from typing import List
 models.Base.metadata.create_all(bind=engine)
 app =FastAPI()
 
-
-
 @app.get("/posts", response_model=List[PostResponse])
 def get_all_posts(db:Session =Depends(get_db)):
     #get all posts from db
