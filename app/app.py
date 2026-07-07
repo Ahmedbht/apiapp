@@ -23,7 +23,7 @@ def get_posts(id: int, db: Session =Depends(get_db)):
         raise HTTPException(status_code=404 , detail="Page not found")
     return post
 
-@app.post("/posts")
+@app.post("/posts", response_model=PostResponse)
 def create_post(post: PostCreate, db:Session =Depends(get_db)):
     new_post= models.Post(
         title=post.title,
