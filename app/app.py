@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app import models
 from app.database import engine ,get_db
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
 app =FastAPI()
